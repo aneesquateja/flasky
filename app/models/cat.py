@@ -1,15 +1,17 @@
-class Cats:
-    def __init__(self, id, name, color, personality):
-        self.id = id
-        self.name = name 
-        self.color = color
-        self.personality = personality
+from sqlalchemy.orm import Mapped, mapped_column
+from ..db import db
 
-cats = [
-    Cats(1, "Luna", "black/white", "lazy personality"),
-    Cats(2, "Simon", "black", "might be a human stuck in a cats body"), 
-    Cats(3, "Reginold", "orange", "only has one brain cell" ),
-    Cats(4, "Leo", "gray tabby", "friendly"),
-    Cats(5, "Ash", "white", "fluffy patty"),
-    Cats(6, "Morty", "orange", "orangy")
-]
+
+class Cat(db.Model): 
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)     # folow syntax SQL alchemy have provided
+    name: Mapped[str]
+    color: Mapped[str]
+    personality: Mapped[str]
+
+    def to_dict(self):
+        return dict(
+            id=self.id,
+            name=self.name,
+            color=self.color,
+            personality=self.personality
+        )
