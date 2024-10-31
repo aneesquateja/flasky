@@ -20,7 +20,27 @@ def create_cat():
 
 @cats_bp.get("")
 def get_all_cats():
-    query = db.select(Cat).order_by(Cat.id)    # this line buids query 
+
+    query = db.select(Cat)
+
+    name_param = request.args.get("name")       #variable name-paramter
+    if name_param:
+        # where restrict to matching cat
+        query = query.where(Cat.name == name_param)   # this line buids query 
+
+    color_param = request.args.get("color")
+    if color_param:
+        # restrict to matching cat
+        query = query.where(Cat.color.ilike(f"%{color_param}%"))   # this line buids query 
+
+    personality_param = request.args.get("personality")
+    if personality_param:
+        # restrict to matching cat
+        query = query.where(Cat.personality.ilike(f"%{personality_param}%"))   # this line buids query 
+    
+    
+    query = query.order_by(Cat.id)
+    
     cats = db.session.scalars(query)       # this  (scalars pluaral return 'cats' and (scalar) singular returns single 'cat')line executes the query
 
     cats_response = [cat.to_dict() for cat in cats]
